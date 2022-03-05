@@ -550,11 +550,15 @@ class _ImageBase(martist.Artist, cm.ScalarMappable):
                 if A.shape[2] == 3:
                     A = _rgb_to_rgba(A)
                 alpha = self._get_scalar_alpha()
-                output_alpha = _resample(  # resample alpha channel
-                    self, A[..., 3], out_shape, t, alpha=alpha)
-                output = _resample(  # resample rgb channels
-                    self, _rgb_to_rgba(A[..., :3]), out_shape, t, alpha=alpha)
-                output[..., 3] = output_alpha  # recombine rgb and alpha
+
+                ## TODO: modified here for speed, alpha channel is wrong
+                output = _resample(self, A, out_shape, t, alpha=alpha)
+
+                # output_alpha = _resample(  # resample alpha channel
+                #     self, A[..., 3], out_shape, t, alpha=alpha)
+                # output = _resample(  # resample rgb channels
+                #     self, _rgb_to_rgba(A[..., :3]), out_shape, t, alpha=alpha)
+                # output[..., 3] = output_alpha  # recombine rgb and alpha
 
             # output is now either a 2D array of normed (int or float) data
             # or an RGBA array of re-sampled input
